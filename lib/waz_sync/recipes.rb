@@ -12,24 +12,23 @@
 #   set :waz_sync_args, "stylesheets,folders"
 #
 
-Capistrano::Configuration.instance.load do
-  namespace :waz_sync do
-    def rails_env
-      fetch(:rails_env, false) ? "RAILS_ENV=#{fetch(:rails_env)}" : ''
-    end
 
-    def args
-      fetch(:waz_sync_args, "")
-    end
-    
-    def roles
-      fetch(:delayed_job_server_role, :master)
-    end
-
-    desc "Sync your assets to Windows Azure"
-    task :sync, :roles => lambda { roles } do
-      run "cd #{current_path};#{rails_env} bundle exec rake waz:sync folders=#{args}"
-    end
-    
+namespace :waz_sync do
+  def rails_env
+    fetch(:rails_env, false) ? "RAILS_ENV=#{fetch(:rails_env)}" : ''
   end
+
+  def args
+    fetch(:waz_sync_args, "")
+  end
+
+  def roles
+    fetch(:delayed_job_server_role, :master)
+  end
+
+  desc "Sync your assets to Windows Azure"
+  task :sync, :roles => lambda { roles } do
+    run "cd #{current_path};#{rails_env} bundle exec rake waz:sync folders=#{args}"
+  end
+
 end
